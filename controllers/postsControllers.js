@@ -36,19 +36,26 @@ const show = (req, res) => {
 	const id = req.params.id
 	const sql = 'SELECT * FROM posts WHERE id = ?'
 	const tagsSql = `
-	SELECT * FROM tags
-	JOIN posts_tags ON posts_tags.tag_id=tags.id
-	WHERE posts_tags.post_id = ?
+	SELECT tags.label
+	FROM tags
+	JOIN post_tag ON post_tag.tag_id=tags.id
+	WHERE post_tag.post_id = ?
 	`
 
-	connection.query(sql, [id], (err, post) => {
-		if (err) return res.status(500).json({ error: 'Error fetching post' })
-		if (post.length === 0) {
+	connection.query(sql, [id], (err, result) => {
+		if (err) return res.status(500).json({ error: 'Error' })
+		if (result.length === 0)
 			return res.status(404).json({
 				message: `404! Post with id ${id} not found`
 			})
-		}
-		res.status(200).json(post)
+		const post = result[0]
+		connection.query(tagsSql, [id], (err, tagsResult) => {
+			if (err) return res.status(500).json({ error: 'Error' })
+			post.tags = tagsResult
+
+			const postWithTags = { data: post }
+			res.status(200).json(postWithTags)
+		})
 	})
 
 	/*const slug = req.params.slug
