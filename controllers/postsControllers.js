@@ -33,7 +33,25 @@ const index = (req, res) => {
 	//})
 }
 const show = (req, res) => {
-	const slug = req.params.slug
+	const id = req.params.id
+	const sql = 'SELECT * FROM posts WHERE id = ?'
+	const tagsSql = `
+	SELECT * FROM tags
+	JOIN posts_tags ON posts_tags.tag_id=tags.id
+	WHERE posts_tags.post_id = ?
+	`
+
+	connection.query(sql, [id], (err, post) => {
+		if (err) return res.status(500).json({ error: 'Error fetching post' })
+		if (post.length === 0) {
+			return res.status(404).json({
+				message: `404! Post with id ${id} not found`
+			})
+		}
+		res.status(200).json(post)
+	})
+
+	/*const slug = req.params.slug
 
 	const post = posts.find((post) => post.slug === slug)
 
@@ -43,7 +61,7 @@ const show = (req, res) => {
 		})
 	}
 
-	res.status(200).json(post)
+	res.status(200).json(post)*/
 }
 
 const store = (req, res) => {
