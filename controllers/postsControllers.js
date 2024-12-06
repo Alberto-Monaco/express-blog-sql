@@ -1,5 +1,6 @@
 const posts = require('../db/db.js')
 const fs = require('fs')
+const connection = require('../db/connection.js')
 
 const show = (req, res) => {
 	const slug = req.params.slug
