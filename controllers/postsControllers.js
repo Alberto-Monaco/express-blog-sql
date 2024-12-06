@@ -87,7 +87,23 @@ const update = (req, res) => {
 }
 
 const destroy = (req, res) => {
-	const post = posts.find((post) => post.slug === req.params.slug)
+	const id = req.params.id
+	const sql = 'DELETE FROM posts WHERE id = ?'
+	connection.query(sql, [id], (err, result) => {
+		if (err) return res.status(500).json({ error: 'Error deleting post' })
+		if (result.affectedRows === 0) {
+			return res.status(404).json({
+				message: `404! Post with id ${id} not found`
+			})
+		}
+		res.status(204).json({
+			status: 204,
+			affectedRows: result.affectedRows,
+			message: 'Post deleted successfully'
+		})
+	})
+
+	/*const post = posts.find((post) => post.slug === req.params.slug)
 	if (!post) {
 		return res.status(404).json({
 			message: `Post with slug ${req.params.slug} not found`
@@ -100,7 +116,7 @@ const destroy = (req, res) => {
 		message: 'Post deleted successfully',
 		data: newPost,
 		counter: newPost.length
-	})
+	})*/
 }
 
 const filterTag = (req, res) => {
