@@ -1,8 +1,18 @@
-const posts = require('../db/db.js')
-const fs = require('fs')
+//const posts = require('../db/db.js')
+//const fs = require('fs')
 const connection = require('../db/connection.js')
 
 const index = (req, res) => {
+	const sql = 'SELECT * FROM posts'
+	connection.query(sql, (err, posts) => {
+		if (err) return res.status(500).json({ error: 'Error fetching posts' })
+		res.json({
+			status: 200,
+			data: posts,
+			counter: posts.length
+		})
+	})
+
 	/*let html = '<ul>'
 	posts.forEach((post) => {
 		html += `
@@ -16,11 +26,11 @@ const index = (req, res) => {
 	})
 	html += '</ul>'
 	res.send(html)*/
-	res.json({
-		status: 200,
-		data: posts,
-		counter: posts.length
-	})
+	//res.json({
+	//	status: 200,
+	//	data: posts,
+	//	counter: posts.length
+	//})
 }
 const show = (req, res) => {
 	const slug = req.params.slug
