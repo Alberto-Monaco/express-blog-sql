@@ -2,20 +2,6 @@ const posts = require('../db/db.js')
 const fs = require('fs')
 const connection = require('../db/connection.js')
 
-const show = (req, res) => {
-	const slug = req.params.slug
-
-	const post = posts.find((post) => post.slug === slug)
-
-	if (!post) {
-		return res.status(404).json({
-			message: '404! not found'
-		})
-	}
-
-	res.status(200).json(post)
-}
-
 const index = (req, res) => {
 	/*let html = '<ul>'
 	posts.forEach((post) => {
@@ -35,6 +21,19 @@ const index = (req, res) => {
 		data: posts,
 		counter: posts.length
 	})
+}
+const show = (req, res) => {
+	const slug = req.params.slug
+
+	const post = posts.find((post) => post.slug === slug)
+
+	if (!post) {
+		return res.status(404).json({
+			message: '404! not found'
+		})
+	}
+
+	res.status(200).json(post)
 }
 
 const store = (req, res) => {
