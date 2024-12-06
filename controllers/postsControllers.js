@@ -96,8 +96,8 @@ const destroy = (req, res) => {
 				message: `404! Post with id ${id} not found`
 			})
 		}
-		res.status(204).json({
-			status: 204,
+		res.status(200).json({
+			status: 200,
 			affectedRows: result.affectedRows,
 			message: 'Post deleted successfully'
 		})
